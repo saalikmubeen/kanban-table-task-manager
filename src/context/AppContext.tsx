@@ -5,7 +5,6 @@ import {
   appReducer,
   AppState,
 } from '../reducers/appReducer';
-import { data } from '../dummyData/data';
 
 interface AppDataContextType {
   state: AppState;
@@ -21,11 +20,7 @@ const AppDataContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = React.useReducer(appReducer, {
-    tasks: data.map((task) => ({
-      ...task,
-      customFields: [],
-    })),
-    // tasks: [],
+    tasks: [],
     fields: [],
     historyStates: [],
     futureStates: [],

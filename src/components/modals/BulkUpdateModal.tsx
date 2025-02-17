@@ -8,7 +8,7 @@ import {
 import Select from '../forms/Select';
 
 import { statuses, priorities } from '../../lib/common';
-import { useAppDataContext } from '../../context/TasksContext';
+import { useAppDataContext } from '../../context/AppContext';
 
 type BulkUpdateModalProps = {
   type: BulkUpdateType;
