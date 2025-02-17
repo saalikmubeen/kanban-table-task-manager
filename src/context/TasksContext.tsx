@@ -1,14 +1,18 @@
 import * as React from 'react';
-import {
-  TasksState,
-  TasksAction,
-  tasksReducer,
-} from '../reducers/tasksReducer';
 import { customCreatereateContext } from './customCreateContect';
+import {
+  AppAction,
+  appReducer,
+  AppState,
+} from '../reducers/appReducer';
+import { data } from '../dummyData/data';
 
 interface AppDataContextType {
-  state: TasksState;
-  dispatch: React.Dispatch<TasksAction>;
+  state: {
+    tasks: AppState['tasks'];
+    fields: AppState['fields'];
+  };
+  dispatch: React.Dispatch<AppAction>;
 }
 
 const [useAppDataContext, AppDataProvider] =
@@ -19,19 +23,29 @@ const AppDataContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [state, dispatch] = React.useReducer(tasksReducer, {
-    tasks: [],
-  } as TasksState);
+  const [state, dispatch] = React.useReducer(appReducer, {
+    tasks: data.map((task) => ({
+      ...task,
+      customFields: [],
+    })),
+    // tasks: [],
+    fields: [],
+  } as unknown as AppState);
 
   React.useEffect(() => {
     try {
       const data = localStorage.getItem('appState');
       if (data) {
-        const tasks = JSON.parse(data);
-        if (Array.isArray(tasks) && tasks.length > 0) {
+        const appData = JSON.parse(data);
+        if (Object.keys(appData).length === 2) {
+          const payload = {
+            tasks: appData.tasks,
+            fields: appData.fields,
+          };
+
           dispatch({
             type: 'LOCAL_STORAGE_LOAD',
-            payload: tasks,
+            payload,
           });
         } else {
           console.warn(
@@ -47,14 +61,24 @@ const AppDataContextProvider = ({
   }, []);
 
   React.useEffect(() => {
-    localStorage.setItem('appState', JSON.stringify(state.tasks));
+    localStorage.setItem(
+      'appState',
+      JSON.stringify({
+        tasks: state.tasks,
+        fields: state.fields,
+      })
+    );
   }, [state]);
 
-  return (
-    <AppDataProvider value={{ state, dispatch }}>
-      {children}
-    </AppDataProvider>
-  );
+  const value = {
+    state: {
+      tasks: state.tasks,
+      fields: state.fields,
+    },
+    dispatch,
+  };
+
+  return <AppDataProvider value={value}>{children}</AppDataProvider>;
 };
 
 export { useAppDataContext, AppDataContextProvider };

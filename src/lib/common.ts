@@ -1,4 +1,4 @@
-import { Priority, Status } from './types';
+import { Priority, Status, Task } from './types';
 
 export const priorities = [
   { id: Priority.High, title: 'High' },
@@ -26,4 +26,14 @@ export const priorityColors = {
   low: 'bg-green-200 text-green-800',
   urgent: 'bg-purple-200 text-purple-800',
   none: 'bg-gray-200 text-gray-800',
+};
+
+export const getCustomFields = (task: Task) => {
+  const taskCustomFields = Object.keys(task).filter((field) => {
+    return (
+      ['id', 'title', 'status', 'priority'].indexOf(field) === -1
+    );
+  });
+
+  return taskCustomFields;
 };

@@ -18,7 +18,7 @@ const TableView = ({ tasks }: TableViewProps) => {
   const { dispatch } = useAppDataContext();
 
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof Task;
+    key: keyof Task | string;
     direction: 'ascending' | 'descending';
   }>({
     key: 'id',
@@ -38,16 +38,45 @@ const TableView = ({ tasks }: TableViewProps) => {
     useState<BulkUpdateType | null>(null);
 
   const sortedData = [...tasks].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === 'ascending' ? -1 : 1;
+    if (sortConfig.key in a && sortConfig.key in b) {
+      const key = sortConfig.key as keyof Task;
+      if (a[key] < b[key]) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    } else {
+      // it's a custom field key
+      const aVal = a.customFields.find(
+        (field) => field.id === sortConfig.key
+      );
+
+      const bVal = b.customFields.find(
+        (field) => field.id === sortConfig.key
+      );
+
+      if (aVal && bVal) {
+        const aValue =
+          aVal.type === 'number' ? Number(aVal.value) : aVal.value;
+        const bValue =
+          bVal.type === 'number' ? Number(bVal.value) : bVal.value;
+
+        if (aValue < bValue) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      } else {
+        return 0;
+      }
     }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === 'ascending' ? 1 : -1;
-    }
-    return 0;
   });
 
-  const requestSort = (key: keyof Task) => {
+  const requestSort = (key: keyof Task | string) => {
     let direction: 'ascending' | 'descending' = 'ascending';
     if (
       sortConfig.key === key &&
@@ -58,7 +87,7 @@ const TableView = ({ tasks }: TableViewProps) => {
     setSortConfig({ key, direction });
   };
 
-  const getSortIcon = (key: keyof Task) => {
+  const getSortIcon = (key: keyof Task | string) => {
     if (sortConfig.key === key) {
       return sortConfig.direction === 'ascending' ? '↑' : '↓';
     }
@@ -111,6 +140,24 @@ const TableView = ({ tasks }: TableViewProps) => {
 
   const totalPages = Math.ceil(sortedData.length / itemsPerPage);
 
+  const customFieldCols =
+    tasks.length > 0
+      ? tasks[0].customFields.map((field) => (
+          <th
+            key={field.name}
+            className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-400 uppercase tracking-wider cursor-pointer"
+            onClick={() => requestSort(field.id)}
+            aria-sort={
+              sortConfig.key === field.id
+                ? sortConfig.direction
+                : 'none'
+            }
+          >
+            {field.name} {getSortIcon(field.id)}
+          </th>
+        ))
+      : null;
+
   return (
     <>
       <div className="overflow-x-auto w-full">
@@ -118,7 +165,7 @@ const TableView = ({ tasks }: TableViewProps) => {
           <Listbox value={itemsPerPage} onChange={setItemsPerPage}>
             <div className="relative w-32">
               <Listbox.Button
-                className="flex w-full items-center justify-between rounded-md border border-neutral-400 px-3 py-1 text-left text-sm hover:border-purple-500 ui-open:border-purple-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+                className="cursor-pointer flex w-full items-center justify-between rounded-md border border-neutral-400 px-3 py-1 text-left text-sm hover:border-purple-500 ui-open:border-purple-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
                 aria-label="Items per page"
               >
                 {itemsPerPage} per page
@@ -247,63 +294,77 @@ const TableView = ({ tasks }: TableViewProps) => {
               >
                 Priority {getSortIcon('priority')}
               </th>
+
+              {customFieldCols}
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-neutral-700 divide-y divide-gray-200 dark:divide-neutral-600">
-            {paginatedData.map((task) => (
-              <tr
-                key={task.id}
-                className={`hover:bg-gray-100 dark:hover:bg-neutral-600 cursor-pointer ${
-                  selectedTasks.has(task.id)
-                    ? 'bg-gray-300 dark:bg-neutral-500'
-                    : ''
-                }`}
-                onClick={() => {
-                  setSelectedTask(task);
-                }}
-                aria-selected={selectedTasks.has(task.id)}
-              >
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                  <input
-                    type="checkbox"
-                    checked={selectedTasks.has(task.id)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCheckboxChange(task.id);
-                    }}
-                    aria-label={`Select task ${task.title}`}
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                  {task.title}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span
-                    className={`px-2 py-1 rounded ${
-                      statusColors[task.status]
-                    }`}
-                  >
-                    {task.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span
-                    className={`px-2 py-1 rounded ${
-                      priorityColors[task.priority]
-                    }`}
-                  >
-                    {task.priority}
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {paginatedData.map((task) => {
+              const { id, priority, status, title, customFields } =
+                task;
+
+              return (
+                <tr
+                  key={id}
+                  className={`hover:bg-gray-100 dark:hover:bg-neutral-600 cursor-pointer ${
+                    selectedTasks.has(task.id)
+                      ? 'bg-gray-300 dark:bg-neutral-500'
+                      : ''
+                  }`}
+                  onClick={() => {
+                    setSelectedTask(task);
+                  }}
+                  aria-selected={selectedTasks.has(id)}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    <input
+                      type="checkbox"
+                      checked={selectedTasks.has(id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCheckboxChange(id);
+                      }}
+                      aria-label={`Select task ${title}`}
+                    />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    {task.title}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <span
+                      className={`px-2 py-1 rounded ${statusColors[status]}`}
+                    >
+                      {status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <span
+                      className={`px-2 py-1 rounded ${priorityColors[priority]}`}
+                    >
+                      {priority}
+                    </span>
+                  </td>
+
+                  {customFields.map((field) => {
+                    return (
+                      <td
+                        key={field.id}
+                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-neutral-400"
+                      >
+                        {field.value || '-'}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <div className="flex justify-between items-center mt-4">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-3 py-1 border rounded-md bg-white dark:bg-neutral-800 dark:border-neutral-600 dark:text-white text-sm"
+            className="cursor-pointer px-3 py-1 border rounded-md bg-white dark:bg-neutral-800 dark:border-neutral-600 dark:text-white text-sm"
             aria-label="Previous page"
           >
             Previous
@@ -315,7 +376,7 @@ const TableView = ({ tasks }: TableViewProps) => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 border rounded-md bg-white dark:bg-neutral-800 dark:border-neutral-600 dark:text-white text-sm"
+              className="cursor-pointer px-3 py-1 border rounded-md bg-white dark:bg-neutral-800 dark:border-neutral-600 dark:text-white text-sm"
               aria-label="Next page"
             >
               Next

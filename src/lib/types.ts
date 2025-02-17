@@ -24,6 +24,14 @@ export interface Task {
   title: string;
   status: Status; // also the column id
   priority: Priority;
+  customFields: CustomField[];
+}
+
+export interface CustomField {
+  id: string;
+  name: string; // name of the custom field
+  value: string | number | boolean; // value of the custom field
+  type: CustomFieldOptions;
 }
 
 export type PriorityType = {
@@ -37,3 +45,5 @@ export type StatusType = {
 };
 
 export type BulkUpdateType = 'status' | 'priority' | 'both';
+
+export type CustomFieldOptions = 'text' | 'number' | 'checkbox';

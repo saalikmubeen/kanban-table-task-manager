@@ -1,3 +1,5 @@
+import { CustomFieldOptions } from '../lib/types';
+
 export function Label({
   caption: label,
   children,
@@ -17,7 +19,8 @@ export function Label({
 
 type InputProps = {
   name: string;
-  value?: string;
+  type?: CustomFieldOptions;
+  value?: string | number;
   placeholder?: string;
   autofocus?: boolean;
   onChange(value: string): void;
@@ -26,13 +29,14 @@ type InputProps = {
 export function Input({
   name,
   value,
+  type = 'text',
   placeholder,
   autofocus,
   onChange,
 }: InputProps) {
   return (
     <input
-      type="text"
+      type={type}
       name={name}
       value={value}
       onChange={(e) => onChange(e.target.value)}

@@ -37,7 +37,7 @@ const Search = ({
       <div className="flex flex-col md:flex-row gap-4 w-full md:w-1/2">
         <Listbox value={priorityFilter} onChange={setPriorityFilter}>
           <div className="relative w-full">
-            <Listbox.Button className="flex w-full items-center justify-between rounded-md border border-neutral-400 px-4 py-2 text-left text-body-lg hover:border-purple-500 ui-open:border-purple-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white">
+            <Listbox.Button className="cursor-pointer flex w-full items-center justify-between rounded-md border border-neutral-400 px-4 py-2 text-left text-body-lg hover:border-purple-500 ui-open:border-purple-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white">
               {priorityFilter.title}
               <span>↓</span>
             </Listbox.Button>
@@ -56,7 +56,7 @@ const Search = ({
         </Listbox>
         <Listbox value={statusFilter} onChange={setStatusFilter}>
           <div className="relative w-full">
-            <Listbox.Button className="flex w-full items-center justify-between rounded-md border border-neutral-400 px-4 py-2 text-left text-body-lg hover:border-purple-500 ui-open:border-purple-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white">
+            <Listbox.Button className="cursor-pointer flex w-full items-center justify-between rounded-md border border-neutral-400 px-4 py-2 text-left text-body-lg hover:border-purple-500 ui-open:border-purple-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white">
               {statusFilter.title}
               <span>↓</span>
             </Listbox.Button>

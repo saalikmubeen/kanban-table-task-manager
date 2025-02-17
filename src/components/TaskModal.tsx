@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Input, Label } from './FormComponents';
 import Modal from './Modal';
-import { PriorityType, StatusType, Task } from '../lib/types';
+import {
+  CustomField,
+  PriorityType,
+  StatusType,
+  Task,
+} from '../lib/types';
 import Select from './Select';
 import { useAppDataContext } from '../context/TasksContext';
 import { Tooltip } from './Tooltip';
@@ -28,9 +33,15 @@ export default function TaskModal({ task, onClose }: TaskModalProps) {
     ? { id: task.priority, title: task.priority }
     : priorities[0];
 
+  const initialCustomFields = task ? task.customFields : [];
+
   const [status, setStatus] = useState<StatusType>(initialStatus);
   const [priority, setPriority] =
     useState<PriorityType>(initialPriority);
+
+  const [customFields, setCustomFields] = useState<CustomField[]>(
+    initialCustomFields
+  );
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -45,6 +56,7 @@ export default function TaskModal({ task, onClose }: TaskModalProps) {
           title: title,
           status: status.id,
           priority: priority.id,
+          customFields,
         },
       });
     } else {
@@ -55,6 +67,7 @@ export default function TaskModal({ task, onClose }: TaskModalProps) {
           title: title,
           status: status.id,
           priority: priority.id,
+          customFields: [],
         },
       });
     }
@@ -73,6 +86,18 @@ export default function TaskModal({ task, onClose }: TaskModalProps) {
 
       onClose();
     }
+  };
+
+  const handleCustomFieldChange = (
+    fieldId: string,
+    value: string
+  ) => {
+    console.log(value);
+    setCustomFields(
+      customFields.map((field) =>
+        field.id === fieldId ? { ...field, value } : field
+      )
+    );
   };
 
   return (
@@ -142,6 +167,43 @@ export default function TaskModal({ task, onClose }: TaskModalProps) {
               />
             </div>
           </div>
+
+          {/* Custom Fields */}
+
+          {customFields.map((field) => {
+            if (field.type === 'checkbox') {
+              return (
+                <Label caption={field.name}>
+                  <input
+                    type="checkbox"
+                    checked={field.value as boolean}
+                    onChange={(e) => {
+                      console.log(e.target.checked);
+
+                      handleCustomFieldChange(
+                        field.id,
+                        e.target.checked.toString()
+                      );
+                    }}
+                    aria-label="Select all tasks"
+                  />
+                </Label>
+              );
+            } else {
+              return (
+                <Label caption={field.name}>
+                  <Input
+                    name={field.name}
+                    value={field.value as string}
+                    type={field.type}
+                    onChange={(value) =>
+                      handleCustomFieldChange(field.id, value)
+                    }
+                  />
+                </Label>
+              );
+            }
+          })}
 
           <button
             type="submit"

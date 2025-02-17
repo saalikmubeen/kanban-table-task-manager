@@ -1,10 +1,21 @@
 import { Listbox } from '@headlessui/react';
-import { PriorityType, StatusType } from '../lib/types';
+import {
+  CustomFieldOptions,
+  PriorityType,
+  StatusType,
+} from '../lib/types';
+
+export type CustomFieldOptionsType = {
+  id: CustomFieldOptions;
+  title: string;
+};
 
 type SelectProps = {
-  selected: PriorityType | StatusType;
-  options: StatusType[] | PriorityType[];
-  onChange(value: PriorityType | StatusType): void;
+  selected: PriorityType | StatusType | CustomFieldOptionsType;
+  options: StatusType[] | PriorityType[] | CustomFieldOptionsType[];
+  onChange(
+    value: PriorityType | StatusType | CustomFieldOptionsType
+  ): void;
 };
 
 export default function StatusSelect({
@@ -20,10 +31,11 @@ export default function StatusSelect({
       onChange={(option) => {
         onChange(option);
       }}
+      className="grow"
     >
       <Listbox.Button
         id="selectButton"
-        className="flex w-full items-center justify-between rounded-[0.25rem] border border-neutral-400 px-4 py-2 text-left text-body-lg hover:border-purple-500 ui-open:border-purple-500 dark:text-white"
+        className="cursor-pointer flex w-full items-center justify-between rounded-[0.25rem] border border-neutral-400 px-4 py-2 text-left text-body-lg hover:border-purple-500 ui-open:border-purple-500 dark:text-white"
       >
         {selected.title}
         <img src="/icon-chevron-down.svg" alt="" />
