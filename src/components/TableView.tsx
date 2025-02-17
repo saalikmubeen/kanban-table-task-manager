@@ -194,12 +194,13 @@ const TableView = ({ tasks }: TableViewProps) => {
               <ul className="grid gap-4">
                 <li>
                   <Button
-                    className="text-red-500 cursor-pointer"
+                    className="text-red-500 cursor-pointer disabled:text-gray-400"
                     onClick={() => {
                       if (selectedTasks.size > 0) {
                         setDeleteModalOpen(true);
                       }
                     }}
+                    disabled={selectedTasks.size === 0}
                   >
                     Bulk Delete
                   </Button>
@@ -207,12 +208,13 @@ const TableView = ({ tasks }: TableViewProps) => {
 
                 <li>
                   <Button
-                    className="text-purple-500 cursor-pointer"
+                    className="text-purple-500 cursor-pointer disabled:text-gray-400"
                     onClick={() => {
                       if (selectedTasks.size > 0) {
                         setBulkUpdateType('status');
                       }
                     }}
+                    disabled={selectedTasks.size === 0}
                   >
                     Change Status
                   </Button>
@@ -220,12 +222,13 @@ const TableView = ({ tasks }: TableViewProps) => {
 
                 <li>
                   <Button
-                    className="text-yellow-500 cursor-pointer"
+                    className="text-yellow-500 cursor-pointer disabled:text-gray-400"
                     onClick={() => {
                       if (selectedTasks.size > 0) {
                         setBulkUpdateType('priority');
                       }
                     }}
+                    disabled={selectedTasks.size === 0}
                   >
                     Change Priority
                   </Button>
@@ -233,12 +236,13 @@ const TableView = ({ tasks }: TableViewProps) => {
 
                 <li>
                   <Button
-                    className="text-blue-500 cursor-pointer"
+                    className="text-blue-500 cursor-pointer disabled:text-gray-400"
                     onClick={() => {
                       if (selectedTasks.size > 0) {
                         setBulkUpdateType('both');
                       }
                     }}
+                    disabled={selectedTasks.size === 0}
                   >
                     Change Both
                   </Button>

@@ -8,10 +8,7 @@ import {
 import { data } from '../dummyData/data';
 
 interface AppDataContextType {
-  state: {
-    tasks: AppState['tasks'];
-    fields: AppState['fields'];
-  };
+  state: AppState;
   dispatch: React.Dispatch<AppAction>;
 }
 
@@ -30,6 +27,8 @@ const AppDataContextProvider = ({
     })),
     // tasks: [],
     fields: [],
+    historyStates: [],
+    futureStates: [],
   } as unknown as AppState);
 
   React.useEffect(() => {
@@ -71,10 +70,7 @@ const AppDataContextProvider = ({
   }, [state]);
 
   const value = {
-    state: {
-      tasks: state.tasks,
-      fields: state.fields,
-    },
+    state,
     dispatch,
   };
 

@@ -5,7 +5,6 @@ interface CustomFieldType {
   id: string;
   name: string; // should be unique
   type: CustomFieldOptions;
-  options?: string[]; // Only applicable for dropdown and multi-select
 }
 
 export type CustomFieldsState = {
@@ -43,30 +42,45 @@ export type AppAction =
       };
     }
   | {
-      type: 'ON_CUSTOM_FIELDS_UPDATE';
-      payload: CustomFieldsState;
-    }
-  | {
       type: 'UPDATE_CUSTOM_FIELDS';
       payload: {
         fields: CustomFieldType[];
       };
-    };
+    }
+  | { type: 'UNDO' }
+  | { type: 'REDO' };
 
 export type AppState = {
   tasks: Task[];
   fields: CustomFieldType[];
+  historyStates: {
+    tasks: Task[];
+    fields: CustomFieldType[];
+  }[];
+  futureStates: {
+    tasks: Task[];
+    fields: CustomFieldType[];
+  }[];
 };
 
 export const appReducer = (
   state: AppState,
   action: AppAction
 ): AppState => {
+  // push the current state to the historyStates array. So the current recent state is always at the end of the array
+  // and is thus the most recent histoty state
+  const newHistoryStates = [
+    ...state.historyStates,
+    { tasks: [...state.tasks], fields: [...state.fields] },
+  ];
+
   switch (action.type) {
     case 'ADD_TASK': {
       return {
         ...state,
         tasks: [...state.tasks, action.payload],
+        historyStates: newHistoryStates,
+        futureStates: [],
       };
     }
     case 'DELETE_TASK': {
@@ -75,6 +89,8 @@ export const appReducer = (
         tasks: state.tasks.filter(
           (task) => task.id !== action.payload.taskId
         ),
+        historyStates: newHistoryStates,
+        futureStates: [],
       };
     }
     case 'EDIT_TASK': {
@@ -83,6 +99,8 @@ export const appReducer = (
         tasks: state.tasks.map((task) =>
           task.id === action.payload.id ? action.payload : task
         ),
+        historyStates: newHistoryStates,
+        futureStates: [],
       };
     }
 
@@ -90,6 +108,8 @@ export const appReducer = (
       return {
         tasks: action.payload.tasks,
         fields: action.payload.fields,
+        historyStates: [],
+        futureStates: [],
       };
     }
 
@@ -99,6 +119,8 @@ export const appReducer = (
         tasks: state.tasks.filter(
           (task) => !action.payload.taskIds.includes(task.id)
         ),
+        historyStates: newHistoryStates,
+        futureStates: [],
       };
     }
 
@@ -111,6 +133,8 @@ export const appReducer = (
               ? { ...task, status: action.payload.status }
               : task
           ),
+          historyStates: newHistoryStates,
+          futureStates: [],
         };
       } else if (action.payload.type === 'priority') {
         return {
@@ -120,6 +144,8 @@ export const appReducer = (
               ? { ...task, priority: action.payload.priority }
               : task
           ),
+          historyStates: newHistoryStates,
+          futureStates: [],
         };
       } else {
         return {
@@ -135,6 +161,8 @@ export const appReducer = (
 
             return task;
           }),
+          historyStates: newHistoryStates,
+          futureStates: [],
         };
       }
     }
@@ -147,7 +175,12 @@ export const appReducer = (
         // if not add it, if there is a custom field in the task that is not in the
         // incoming custom fields, remove it
 
-        const updatedTask = { ...task };
+        const updatedTask = {
+          ...task,
+          customFields: task.customFields
+            ? [...task.customFields]
+            : [],
+        }; // Deep clone custom fields
 
         action.payload.fields.forEach((field) => {
           const fieldsExists = taskCurrentCustomFields.find(
@@ -194,6 +227,63 @@ export const appReducer = (
       return {
         fields: action.payload.fields,
         tasks: updatedTasks,
+        historyStates: newHistoryStates,
+        futureStates: [],
+      };
+    }
+
+    case 'UNDO': {
+      console.log('UNDO');
+      console.log(state.historyStates);
+      // To undo, we need to take the last history state and make it the current state
+      // and push the current state to the future states array
+
+      if (state.historyStates.length === 0) return state;
+      const latestHistoryState =
+        state.historyStates[state.historyStates.length - 1];
+
+      if (!latestHistoryState) {
+        return state;
+      }
+
+      const newFutureStates = [
+        ...state.futureStates,
+        // Push the current state to the future states array so we can redo it
+        { tasks: [...state.tasks], fields: [...state.fields] },
+      ];
+
+      return {
+        ...state,
+        tasks: latestHistoryState.tasks,
+        fields: latestHistoryState.fields,
+        historyStates: state.historyStates.slice(0, -1),
+        futureStates: newFutureStates,
+      };
+    }
+
+    case 'REDO': {
+      // To redo, we need to take the last future state and make it the current state
+      // and push the current state to the history states array
+      if (state.futureStates.length === 0) return state;
+      const latestFutureState =
+        state.futureStates[state.futureStates.length - 1];
+
+      if (!latestFutureState) {
+        return state;
+      }
+
+      const newHistoryStates = [
+        ...state.historyStates,
+        // Push the current state to the history states array so we can undo it
+        { tasks: [...state.tasks], fields: [...state.fields] },
+      ];
+
+      return {
+        ...state,
+        tasks: latestFutureState.tasks,
+        fields: latestFutureState.fields,
+        historyStates: newHistoryStates,
+        futureStates: state.futureStates.slice(0, -1), // remove the last future state as we redid it
       };
     }
 

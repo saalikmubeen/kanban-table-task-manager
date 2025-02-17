@@ -1,50 +1,33 @@
-# React + TypeScript + Vite
+# Senior Frontend Engineer Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Another  Task Management Application like Linear or Asana
 
-Currently, two official plugins are available:
+# Core Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [x] **Task management (CRUD)**: Implemented task creation, editing, deletion, and viewing in a table format.
+- [x] **Managing tasks**: Modal/slideout for task creation and editing, along with task deletion functionality.
+- [x] **Filtering, sorting, and pagination**: Tasks can be filtered, sorted by columns, searched and paginated for better UX.
+- [x] **Custom Fields**: Implemented a custom fields editor allowing users to dynamically modify task structure with fields such as text, number, or checkbox.
+- [x] **Local Storage**: Persisted task data in local storage for data retention across sessions.
 
-## Expanding the ESLint configuration
+# Optional Milestones
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [x] **Undo/Redo**: Added undo/redo functionality for all possible operations.
+- [x] **Multiselect for bulk actions**: Enabled multi-select functionality for bulk task edits or deletion.
+- [x] **Kanban view**: Created an alternative Kanban board layout for task management items based on the priority field.
 
-- Configure the top-level `parserOptions` property like this:
+# Added Milestone
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- [x] **Light/Dark Mode**: Implemented light/dark mode toggle for improved user experience across various environments.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+# Tech Stack
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **React**: Best frontend library to ever exist.
+- **TypeScript**: Did myself a favor by using TypeScript.
+- **Headless UI**: For the modal and slideout components.
+- **Tailwind CSS**: For the styling and utility-first approach.
+- **State Management**: Used React Context API for state management. Why overcomplicate things?
+- **Local Storage**: For persisting task data. NNot building a unicorn startup here. Are we?
+- **Vite**: For the build tooling. It's fast, like really fast.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+# [Demo Link](https://g-frontend-assignment.netlify.app)
