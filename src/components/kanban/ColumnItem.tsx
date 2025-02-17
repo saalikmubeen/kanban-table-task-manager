@@ -1,5 +1,5 @@
-import { Column } from '../lib/types';
-import { TaskItem } from './TaskItem';
+import { Column } from '../../lib/types';
+import TaskItem from './TaskItem';
 
 const priorityColors = {
   high: 'before:bg-red-200',

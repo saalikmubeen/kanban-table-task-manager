@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
-import { Input, Label } from './FormComponents';
+import { Input, Label } from '../forms/FormComponents';
 import Modal from './Modal';
 import { Button } from '@headlessui/react';
-import Select, { CustomFieldOptionsType } from './Select';
-import { CustomFieldOptions } from '../lib/types';
-import { useAppDataContext } from '../context/TasksContext';
+import Select from '../forms/Select';
+import {
+  CustomFieldOptions,
+  CustomFieldOptionsType,
+} from '../../lib/types';
+import { useAppDataContext } from '../../context/TasksContext';
 
 interface CustomField {
   id: string;

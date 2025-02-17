@@ -1,12 +1,13 @@
 import { Empty } from './components/Empty';
-import Header from './components/Header';
+
 import { useAppDataContext } from './context/TasksContext';
 import { Tab } from '@headlessui/react';
 import { useState } from 'react';
 import { priorities, statuses } from './lib/common';
-import Search from './components/Search';
+import Search from './components/forms/Search';
+import Header from './components/header/Header';
+import KanbanView from './components/kanban/KanbanView';
 import TableView from './components/TableView';
-import KanbanView from './components/KanbanView';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');

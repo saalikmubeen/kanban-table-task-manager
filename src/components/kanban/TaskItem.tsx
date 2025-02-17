@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Task } from '../lib/types';
-import TaskModal from './TaskModal';
-import { statusColors } from '../lib/common';
+import { statusColors } from '../../lib/common';
+import { Task } from '../../lib/types';
+import TaskModal from '../modals/TaskModal';
 
-export function TaskItem({ task }: { task: Task }) {
+export default function TaskItem({ task }: { task: Task }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>

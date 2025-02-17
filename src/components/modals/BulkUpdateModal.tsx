@@ -4,11 +4,11 @@ import {
   BulkUpdateType,
   PriorityType,
   StatusType,
-} from '../lib/types';
-import Select from './Select';
+} from '../../lib/types';
+import Select from '../forms/Select';
 
-import { statuses, priorities } from '../lib/common';
-import { useAppDataContext } from '../context/TasksContext';
+import { statuses, priorities } from '../../lib/common';
+import { useAppDataContext } from '../../context/TasksContext';
 
 type BulkUpdateModalProps = {
   type: BulkUpdateType;

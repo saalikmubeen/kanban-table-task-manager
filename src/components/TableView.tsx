@@ -1,12 +1,12 @@
+import { useState } from 'react';
 import { Button, Listbox } from '@headlessui/react';
 import { BulkUpdateType, Task } from '../lib/types';
-import TaskModal from './TaskModal';
-import { useState } from 'react';
 import { statusColors, priorityColors } from '../lib/common';
 import { Tooltip } from './Tooltip';
-import DeleteTaskModal from './DeleteTaskModal';
 import { useAppDataContext } from '../context/TasksContext';
-import BulkUpdateModal from './BulkUpdateModal';
+import BulkUpdateModal from './modals/BulkUpdateModal';
+import DeleteTaskModal from './modals/DeleteTaskModal';
+import TaskModal from './modals/TaskModal';
 
 const pageSizeOptions = [5, 10, 20, 50];
 

@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
-import { Input, Label } from './FormComponents';
-import Modal from './Modal';
-import {
-  CustomField,
-  PriorityType,
-  StatusType,
-  Task,
-} from '../lib/types';
-import Select from './Select';
-import { useAppDataContext } from '../context/TasksContext';
-import { Tooltip } from './Tooltip';
 import { Button } from '@headlessui/react';
-import { statuses, priorities } from '../lib/common';
+import { nanoid } from 'nanoid';
+import { useState } from 'react';
+import { useAppDataContext } from '../../context/TasksContext';
+import { statuses, priorities } from '../../lib/common';
+import {
+  Task,
+  StatusType,
+  PriorityType,
+  CustomField,
+} from '../../lib/types';
+import { Tooltip } from '../Tooltip';
 import DeleteTaskModal from './DeleteTaskModal';
+import Modal from './Modal';
+import { Input, Label } from '../forms/FormComponents';
+import Select from '../forms/Select';
 
 type TaskModalProps = {
   task?: Task;

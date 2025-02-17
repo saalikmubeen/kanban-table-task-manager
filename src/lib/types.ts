@@ -47,3 +47,8 @@ export type StatusType = {
 export type BulkUpdateType = 'status' | 'priority' | 'both';
 
 export type CustomFieldOptions = 'text' | 'number' | 'checkbox';
+
+export type CustomFieldOptionsType = {
+  id: CustomFieldOptions;
+  title: string;
+};

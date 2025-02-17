@@ -1,14 +1,9 @@
 import { Listbox } from '@headlessui/react';
 import {
-  CustomFieldOptions,
+  CustomFieldOptionsType,
   PriorityType,
   StatusType,
-} from '../lib/types';
-
-export type CustomFieldOptionsType = {
-  id: CustomFieldOptions;
-  title: string;
-};
+} from '../../lib/types';
 
 type SelectProps = {
   selected: PriorityType | StatusType | CustomFieldOptionsType;

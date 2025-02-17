@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import TaskModal from './TaskModal';
 import { Button } from '@headlessui/react';
+import TaskModal from './modals/TaskModal';
 
 type NewTaskButtonProps = {
   header: boolean;

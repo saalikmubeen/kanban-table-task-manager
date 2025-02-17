@@ -1,4 +1,4 @@
-import { CustomFieldOptions } from '../lib/types';
+import { CustomFieldOptions } from '../../lib/types';
 
 export function Label({
   caption: label,

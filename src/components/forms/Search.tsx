@@ -1,8 +1,8 @@
 import { Listbox } from '@headlessui/react';
 import React from 'react';
 import { Input } from './FormComponents';
-import { priorities, statuses } from '../lib/common';
-import { PriorityType, StatusType } from '../lib/types';
+import { priorities, statuses } from '../../lib/common';
+import { PriorityType, StatusType } from '../../lib/types';
 
 type SearchProps = {
   setPriorityFilter: React.Dispatch<

@@ -1,4 +1,4 @@
-import { Priority, Task } from '../lib/types';
+import { Priority, Task } from '../../lib/types';
 import ColumnItem from './ColumnItem';
 
 type KanbanViewProps = {

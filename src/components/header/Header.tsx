@@ -1,10 +1,10 @@
-import ThemeToggle from './ThemeToggle';
-import NewTaskButton from './NewTaskButton';
-import { Tooltip } from './Tooltip';
 import { Button } from '@headlessui/react';
 import { useState } from 'react';
-import CustomFieldModal from './CustomFieldModal';
-import { useAppDataContext } from '../context/TasksContext';
+import { useAppDataContext } from '../../context/TasksContext';
+import CustomFieldModal from '../modals/CustomFieldModal';
+import NewTaskButton from '../NewTaskButton';
+import { Tooltip } from '../Tooltip';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   const [customFieldModalOpen, setCustomFieldModalOpen] =
