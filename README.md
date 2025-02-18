@@ -26,8 +26,8 @@
 - **TypeScript**: Did myself a favor by using TypeScript.
 - **Headless UI**: For the modal and slideout components.
 - **Tailwind CSS**: For the styling and utility-first approach.
-- **State Management**: Used React Context API for state management. Why overcomplicate things?
-- **Local Storage**: For persisting task data. NNot building a unicorn startup here. Are we?
+- **State Management**: Used React's useReducer for state management and Context API to share state. Why overcomplicate things?
+- **Local Storage**: For persisting task data. Not building a unicorn startup here. Are we?
 - **Vite**: For the build tooling. It's fast, like really fast.
 
 # [Demo Link](https://g-frontend-assignment.netlify.app)
